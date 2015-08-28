@@ -28,6 +28,8 @@ public:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -49,6 +51,12 @@ END_MESSAGE_MAP()
 
 CDay2Dlg::CDay2Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDay2Dlg::IDD, pParent)
+	, m_strMessage(_T(""))
+	, m_strProgToRun(_T(""))
+	, m_bEnableMsg(FALSE)
+	, m_bEnablePgm(FALSE)
+	, m_bShowMsg(FALSE)
+	, m_bShowPgm(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -56,12 +64,24 @@ CDay2Dlg::CDay2Dlg(CWnd* pParent /*=NULL*/)
 void CDay2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_MSG, m_strMessage);
+	DDX_CBString(pDX, IDC_PROGTORUN, m_strProgToRun);
+	DDX_Check(pDX, IDC_CKENBLMSG, m_bEnableMsg);
+	DDX_Check(pDX, IDC_CKENBLPGM, m_bEnablePgm);
+	DDX_Check(pDX, IDC_CKSHWMSG, m_bShowMsg);
+	DDX_Check(pDX, IDC_CKSHWPGM, m_bShowPgm);
 }
 
 BEGIN_MESSAGE_MAP(CDay2Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_EXIT, &CDay2Dlg::OnClickedExit)
+	ON_BN_CLICKED(IDC_SHWMSG, &CDay2Dlg::OnClickedShwmsg)
+	ON_BN_CLICKED(IDC_CLRMSG, &CDay2Dlg::OnClickedClrmsg)
+	ON_BN_CLICKED(IDC_DFLTMSG, &CDay2Dlg::OnClickedDfltmsg)
+	ON_BN_CLICKED(IDC_CKENBLMSG, &CDay2Dlg::OnClickedCkenblmsg)
+	ON_BN_CLICKED(IDC_CKSHWMSG, &CDay2Dlg::OnClickedCkshwmsg)
 END_MESSAGE_MAP()
 
 
@@ -97,6 +117,16 @@ BOOL CDay2Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	//My code starts here
+	m_strMessage = _T("Place a message here");
+	m_bEnableMsg = TRUE;
+	m_bEnablePgm = TRUE;
+	m_bShowMsg = TRUE;
+	m_bShowPgm = TRUE;
+	
+	UpdateData(FALSE);
+	//My code ends here
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -150,3 +180,100 @@ HCURSOR CDay2Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CDay2Dlg::OnClickedExit()
+{
+	OnOK();
+}
+
+
+void CDay2Dlg::OnClickedShwmsg()
+{
+	UpdateData(TRUE);
+	MessageBox(m_strMessage);
+}
+
+
+void CDay2Dlg::OnClickedClrmsg()
+{
+	m_strMessage = "";
+	UpdateData(FALSE);
+}
+
+
+void CDay2Dlg::OnClickedDfltmsg()
+{
+	m_strMessage = _T("Place a message here");
+}
+
+
+void CDay2Dlg::OnClickedCkenblmsg()
+{
+	///////////////////////
+	// MY CODE STARTS HERE
+	///////////////////////
+	
+	// Get the current values from the screen
+	UpdateData(TRUE);
+	
+	// Is the Enable Message Action check box checked?
+	if (m_bEnableMsg == TRUE)
+	{
+		// Yes, so enable all controls that have anything
+		// to do with showing the user message
+		GetDlgItem(IDC_MSG)->EnableWindow(TRUE);
+		GetDlgItem(IDC_SHWMSG)->EnableWindow(TRUE);
+		GetDlgItem(IDC_DFLTMSG)->EnableWindow(TRUE);
+		GetDlgItem(IDC_CLRMSG)->EnableWindow(TRUE);
+		GetDlgItem(IDC_STATICMSG)->EnableWindow(TRUE);
+	}
+	else
+	{
+		// No, so disable all controls that have anything
+		// to do with showing the user message
+		GetDlgItem(IDC_MSG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_SHWMSG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_DFLTMSG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_CLRMSG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_STATICMSG)->EnableWindow(FALSE);
+	}
+	
+	///////////////////////
+	// MY CODE ENDS HERE
+	///////////////////////
+}
+
+
+void CDay2Dlg::OnClickedCkshwmsg()
+{
+	
+	///////////////////////
+	// MY CODE STARTS HERE
+	///////////////////////
+	
+	// Get the current values from the screen
+	UpdateData(CONTROLSTOVARIALBES);
+	
+	// Is the Show Message Action check box checked?
+	if (m_bShowMsg == TRUE)
+	{
+	// Yes, so show all controls that have anything
+	// to do with showing the user message
+	GetDlgItem(IDC_MSG)->ShowWindow(TRUE);
+	GetDlgItem(IDC_SHWMSG)->ShowWindow(TRUE);
+	GetDlgItem(IDC_DFLTMSG)->ShowWindow(TRUE);
+	GetDlgItem(IDC_CLRMSG)->ShowWindow(TRUE);
+	GetDlgItem(IDC_STATICMSG)->ShowWindow(TRUE);
+	}
+	else
+	{
+	// No, so hide all controls that have anything
+	// to do with showing the user message
+	GetDlgItem(IDC_MSG)->ShowWindow(FALSE);
+	GetDlgItem(IDC_SHWMSG)->ShowWindow(FALSE);
+	GetDlgItem(IDC_DFLTMSG)->ShowWindow(FALSE);
+	GetDlgItem(IDC_CLRMSG)->ShowWindow(FALSE);
+	GetDlgItem(IDC_STATICMSG)->ShowWindow(FALSE);
+	}
+}
