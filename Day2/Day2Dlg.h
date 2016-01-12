@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "afxwin.h"
 
 #define CONTROLSTOVARIALBES TRUE
 #define VARIABLESTOCONTROLS FALSE
@@ -25,6 +26,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	BOOL fInitialized;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -50,4 +52,6 @@ public:
 	afx_msg void OnClickedDfltmsg();
 	afx_msg void OnClickedCkenblmsg();
 	afx_msg void OnClickedCkshwmsg();
+	// control variable
+	CEdit c_edit2;
 };

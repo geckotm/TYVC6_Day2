@@ -1,4 +1,4 @@
-
+﻿
 // Day2Dlg.cpp : implementation file
 //
 
@@ -57,6 +57,7 @@ CDay2Dlg::CDay2Dlg(CWnd* pParent /*=NULL*/)
 	, m_bEnablePgm(FALSE)
 	, m_bShowMsg(FALSE)
 	, m_bShowPgm(FALSE)
+	, fInitialized(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -70,6 +71,7 @@ void CDay2Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CKENBLPGM, m_bEnablePgm);
 	DDX_Check(pDX, IDC_CKSHWMSG, m_bShowMsg);
 	DDX_Check(pDX, IDC_CKSHWPGM, m_bShowPgm);
+	DDX_Control(pDX, IDC_EDIT2, c_edit2);
 }
 
 BEGIN_MESSAGE_MAP(CDay2Dlg, CDialogEx)
@@ -119,13 +121,16 @@ BOOL CDay2Dlg::OnInitDialog()
 	// TODO: Add extra initialization here
 
 	//My code starts here
-	m_strMessage = _T("Place a message here");
+	m_strMessage = _T("Puneţi un mesaj aici");
 	m_bEnableMsg = TRUE;
 	m_bEnablePgm = TRUE;
 	m_bShowMsg = TRUE;
 	m_bShowPgm = TRUE;
-	
+	c_edit2.SetWindowTextW(_T("Control variable behind"));
+
 	UpdateData(FALSE);
+
+	fInitialized = TRUE;
 	//My code ends here
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -237,6 +242,13 @@ void CDay2Dlg::OnClickedCkenblmsg()
 		GetDlgItem(IDC_DFLTMSG)->EnableWindow(FALSE);
 		GetDlgItem(IDC_CLRMSG)->EnableWindow(FALSE);
 		GetDlgItem(IDC_STATICMSG)->EnableWindow(FALSE);
+	}
+	//TTT http://www.flounder.com/getdlgitem.htm - avoid GetDlgItem - always have control variables
+	// variabila fInitialized se foloseste pentru a evita accesul la controale care nu exista inca
+	// vezi in link-ul de mai sus partea cu WM_SIZE
+	if (fInitialized)
+	{
+		m_bEnableMsg ? c_edit2.EnableWindow(TRUE) : c_edit2.EnableWindow(FALSE);
 	}
 	
 	///////////////////////
